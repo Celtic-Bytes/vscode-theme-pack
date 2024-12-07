@@ -2,7 +2,7 @@
   "name": "celticbytes-themes-pack",
   "displayName": "Celticbytes Themes Pack",
   "description": "Pack of various dark and light themes.",
-  "publisher": "CelticBytes",
+  "publisher": "cb-theme-pack",
   "version": "1.2.0",
   "scripts": {
     "build": "tsc && node dist/index.js",
