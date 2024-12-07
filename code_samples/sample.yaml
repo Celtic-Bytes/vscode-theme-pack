@@ -1,0 +1,71 @@
+version: "1.0"
+
+stages:
+  - Prepare
+  - Build
+  - Push
+  - Deploy
+
+steps:
+  main_clone:
+    title: "Clone repository"
+    type: git-clone
+    hi: 1234
+    stage: Prepare
+    description: "Initialize"
+    repo: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
+    git: CF-default
+    revision: ${{CF_REVISION}}
+
+  build_image:
+    title: Build image
+    stage: Build
+    type: build
+    description: Build image
+    image_name: ${{CF_DOCKER_REPO_URL}}/${{CF_REPO_NAME}}
+    dockerfile: Dockerfile
+
+  push_image_commit:
+    title: Push image with commit tag
+    stage: Push
+    type: push
+    candidate: ${{build_image}}
+    registry: dockerhub
+    tags:
+      - "${{CF_REVISION}}"
+    is_active: true
+
+  deploy_master:
+    title: Deploying to Master
+    stage: "Deploy"
+    image: "codefresh/cli:latest"
+    environment:
+      - STAGE=master
+    commands:
+      - codefresh run "${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}/deploy-${STAGE}" -b="${{CF_BRANCH}}" -v "CF_RELEASE_TAG=${{CF_REVISION}}" -v "CF_SHORT_REVISION=${{CF_SHORT_REVISION}}" -v "CF_COMMIT_URL=${{CF_COMMIT_URL}}" -v "CF_COMMIT_MESSAGE=${CF_COMMIT_MESSAGE}" -v "CF_COMMIT_AUTHOR=${{CF_COMMIT_AUTHOR}}" -v "CF_BRANCH_TAG_NORMALIZED=${{CF_BRANCH_TAG_NORMALIZED}}" -v "STAGE=${STAGE}"
+    when:
+      branch:
+        only:
+          - master
+
+  hosts: web
+  become: true
+  vars:
+    http_port: 80
+    max_clients: 200
+  tasks:
+    - name: ensure apache is at the latest version
+      yum:
+        name: httpd
+        state: latest
+    - name: write the apache config file
+      template:
+        src: /srv/httpd.j2
+        dest: /etc/httpd.conf
+      notify:
+        - restart apache
+    - name: ensure apache is running (and enable it at boot)
+      service:
+        name: httpd
+        state: started
+        enabled: true

@@ -1,0 +1,72 @@
+{
+  "name": "celticbytes-themes-pack",
+  "displayName": "Celticbytes Themes Pack",
+  "description": "Pack of various dark and light themes.",
+  "publisher": "CelticBytes",
+  "version": "1.2.0",
+  "scripts": {
+    "build": "tsc && node dist/index.js",
+    "watch": "nodemon",
+    "package": "vsce package"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Celtic-Bytes/vscode-theme-pack"
+  },
+  "engines": {
+    "vscode": "^1.68.0"
+  },
+  "keywords": [
+    "theme",
+    "dark",
+    "light",
+    "pack",
+    "monokai",
+    "free",
+    "celticbytes"
+  ],
+  "icon": "assets/icon/celticbytes_themepack_logo.png",
+  "galleryBanner": {
+    "color": "#272727",
+    "theme": "dark"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "author": {
+    "name": "Stephane Marini",
+    "email": "celticbytes@gmail.com",
+    "url": "http://www.linkedin.com/in/stephane-margini"
+  },
+  "contributes": {
+    "themes": [
+      {
+        "label": "CelticBytes Monodark",
+        "uiTheme": "vs-dark",
+        "path": "./themes/Monodark-color-theme.json"
+      },
+      {
+        "label": "CelticBytes Banana in the night",
+        "uiTheme": "vs-dark",
+        "path": "./themes/BananaInTheNight-color-theme.json"
+      },
+      {
+        "label": "CelticBytes Monolight",
+        "uiTheme": "vs",
+        "path": "./themes/Monolight-color-theme.json"
+      }
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "@vscode/vsce": "^3.2.1",
+    "nodemon": "^3.1.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "@types/color": "^4.2.0",
+    "celticbytes-themes-pack": "file:",
+    "color": "^4.2.3"
+  }
+}
